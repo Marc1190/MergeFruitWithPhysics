@@ -31,11 +31,13 @@ class Fruit {
     }
 
     applyPhysics(deltaTime) {
+        const dt = deltaTime / 16.67; // Normalize physics to 60fps
+
         // Apply gravity (weight affects acceleration)
-        this.vy += this.gravity;// * this.weight;
-        
-        this.x += this.vx;
-        this.y += this.vy;
+        this.vy += this.gravity * dt; // dt keeps motion frame-rate independent
+
+        this.x += this.vx * dt;
+        this.y += this.vy * dt;
 
         // Check if fruit is above the board
         if (this.isAboveBoard()) {
@@ -57,11 +59,11 @@ class Fruit {
         }
 
         // Apply friction (weight affects friction)
-        this.vx *= 0.99 / this.weight;
-        // this.vy *= 0.99 / this.weight;
+        this.vx *= Math.pow(0.99, dt) / this.weight;
+        // this.vy *= Math.pow(0.99, dt) / this.weight;
 
         // Rotate the fruit (weight affects rotation speed)
-        this.rotation += this.vx / this.weight;
+        this.rotation += (this.vx / this.weight) * dt;
 
         this.updatePosition();
     }
